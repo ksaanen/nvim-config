@@ -1,5 +1,5 @@
 vim.api.nvim_create_autocmd("VimEnter", {
-callback = function() 
+	callback = function()
 		require("telescope").setup({
 			extensions = {
 				["ui-select"] = {
@@ -30,7 +30,12 @@ callback = function()
 		vim.keymap.set("n", "<leader>sn", function()
 			builtin.find_files({ cwd = vim.fn.stdpath("config") })
 		end, { desc = "[S]earch [N]eovim files" })
+
+		vim.keymap.set(
+			"v",
+			"<C-f>",
+			"y<ESC>:Telescope live_grep default_text=<c-r>0<CR>",
+			{ desc = "Live grep visual selection" }
+		)
 	end,
 })
-
-
