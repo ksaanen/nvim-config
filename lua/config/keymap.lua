@@ -10,7 +10,7 @@ vim.keymap.set("n", "<C-l>", "<C-w><C-l>", { desc = "Move focus to the right win
 vim.keymap.set("n", "<C-j>", "<C-w><C-j>", { desc = "Move focus to the lower window" })
 vim.keymap.set("n", "<C-k>", "<C-w><C-k>", { desc = "Move focus to the upper window" })
 
--- buffers
+-- Buffers
 vim.keymap.set("n", "<C-b>", ":buffers<CR>:buffer<Space>")
 
 -- Telescope
@@ -22,3 +22,15 @@ vim.keymap.set("n", "<leader>fh", telescope_builtin.help_tags, { desc = "[F]ind 
 vim.keymap.set("n", "<leader>fk", telescope_builtin.keymaps, { desc = "[F]ind [K]eymaps" })
 vim.keymap.set("n", "<leader>fd", telescope_builtin.diagnostics, { desc = "[F]ind [D]iagnostics" })
 vim.keymap.set("n", "<leader>fr", telescope_builtin.resume, { desc = "[F]ind [R]esume" })
+
+-- Lsp
+vim.keymap.set("n", "gD", vim.lsp.buf.declaration, { desc = "[G]o to [D]eclaration" })
+vim.keymap.set("n", "gd", vim.lsp.buf.definition, { desc = "[G]o to [D]efinition" })
+vim.keymap.set("n", "K", vim.lsp.buf.hover, { desc = "Hover Documentation" })
+vim.keymap.set("n", "gi", vim.lsp.buf.implementation, { desc = "[G]o to [I]mplementation" })
+vim.keymap.set("n", "<space>wa", vim.lsp.buf.add_workspace_folder, { desc = "[W]orkspace [A]dd Folder" })
+vim.keymap.set("n", "<space>wr", vim.lsp.buf.remove_workspace_folder, { desc = "[W]orkspace [R]emove Folder" })
+vim.keymap.set("n", "<space>wl", function()
+	print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
+end, { desc = "[W]orkspace [L]ist Folders" })
+vim.keymap.set("n", "gr", vim.lsp.buf.references, { desc = "[G]o to [R]eferences" })

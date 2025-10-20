@@ -6,6 +6,9 @@ treesitter.setup({
 			"lua",
 			"typescript",
 			"angular",
+			"json",
+			"html",
+			"scss",
 			"rust",
 		},
 		-- Autoinstall languages that are not installed
