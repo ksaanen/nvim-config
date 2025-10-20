@@ -23,14 +23,15 @@ Then add this to your shell config (~/.bashrc, ~/.zshrc, ...):
 - Install CMake ```sudo apt install cmake```
 
 ## Features
-- Native LSP (https://github.com/neovim/nvim-lspconfig)
+- Build-in LSP (https://github.com/neovim/nvim-lspconfig)
 - Telescope (https://github.com/nvim-telescope/telescope.nvim)
 
 ## Language support
+- Angular
 - Lua
 - Rust
+- Sass/Scss
 - TypeScript
-- Angular
 
 ### Additional steps needed for language support
 - Install NodeJS (https://nodejs.org/en/download/)
