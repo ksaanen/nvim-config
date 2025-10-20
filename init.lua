@@ -43,14 +43,13 @@ vim.pack.add({
 	{ src = "https://github.com/github/copilot.vim" },
 })
 
+-- Init mini.statusline
+
 -- Init catpuccin color scheme
 -- vim.cmd.colorscheme("catppuccin")
 
 -- Init tokyonight color scheme
 vim.cmd.colorscheme("tokyonight-moon")
-
--- Init statusline
-require("mini.statusline").setup()
 
 -- Load plugin configurations
 require("plugins.which-key")
@@ -59,6 +58,7 @@ require("plugins.telescope")
 require("plugins.treesitter")
 require("plugins.conform")
 require("plugins.blink")
+require("plugins.mini")
 
 -- General Settings
 -- -----------------------------------------------------------------------------
