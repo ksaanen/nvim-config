@@ -1,9 +1,8 @@
-return {
-	-- Highlight, edit, and navigate code
-	build = ":TSUpdate",
-	main = "nvim-treesitter.configs", -- Sets main module to use for opts
-	-- [[ Configure Treesitter ]] See `:help nvim-treesitter`
-	opts = {
+local treesitter = require("nvim-treesitter")
+treesitter.setup({
+	configs = {
+
+		build = ":TSUpdate",
 		ensure_installed = {
 			"lua",
 			"rust",
@@ -13,4 +12,4 @@ return {
 		highlight = { enable = true },
 		indent = { enable = true },
 	},
-}
+})

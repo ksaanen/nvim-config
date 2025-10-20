@@ -1,4 +1,4 @@
-# nvim-config
+# nvim-lazy-setup
 
 ## Installation
 
