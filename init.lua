@@ -12,8 +12,11 @@ vim.pack.add({
 	{ src = "https://github.com/nvim-lua/plenary.nvim" },
 	{ src = "https://github.com/nvim-telescope/telescope.nvim", branch = "0.1.x" },
 
-	-- Catppucchin
-	{ src = "https://github.com/catppuccin/nvim", name = "catppuccin" },
+	-- Catppucchin colorscheme
+	-- { src = "https://github.com/catppuccin/nvim", name = "catppuccin" },
+
+	-- Tokyonight colorscheme
+	{ src = "https://github.com/folke/tokyonight.nvim", name = "tokyonight" },
 
 	-- Blink
 	{ src = "saghen/blink.nvim" },
@@ -41,7 +44,10 @@ vim.pack.add({
 })
 
 -- Init catpuccin color scheme
-vim.cmd.colorscheme("catppuccin")
+-- vim.cmd.colorscheme("catppuccin")
+
+-- Init tokyonight color scheme
+vim.cmd.colorscheme("tokyonight-moon")
 
 -- Init statusline
 require("mini.statusline").setup()

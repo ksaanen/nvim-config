@@ -76,6 +76,10 @@
       "rev": "b4da76b",
       "src": "https://github.com/nvim-telescope/telescope.nvim"
     },
+    "tokyonight": {
+      "rev": "e63c42a",
+      "src": "https://github.com/folke/tokyonight.nvim"
+    },
     "which-key": {
       "rev": "b4177e3",
       "src": "https://github.com/folke/which-key.nvim"
