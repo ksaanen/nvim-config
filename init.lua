@@ -19,7 +19,7 @@ vim.pack.add({
 	{ src = "https://github.com/folke/tokyonight.nvim",          name = "tokyonight" },
 
 	-- Blink / blinktree
-	{ src = "saghen/blink.nvim" },
+	{ src = "https://github.com/saghen/blink.nvim" },
 
 	-- Mini / statusline
 	{ src = "https://github.com/echasnovski/mini.nvim" },

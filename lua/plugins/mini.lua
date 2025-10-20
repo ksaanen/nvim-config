@@ -13,7 +13,7 @@ require("mini.statusline").setup({
 			local lsp = MiniStatusline.section_lsp({ trunc_width = 80 })
 
 			return MiniStatusline.combine_groups({
-				{ hl = mode_hl, strings = { mode } },
+				{ hl = mode_hl,                 strings = { mode } },
 				{ hl = "MiniStatuslineDevinfo", strings = { git, diagnostics, lsp } },
 				"%<",
 				{ hl = "MiniStatuslineFilename", strings = { filename } },
@@ -43,7 +43,7 @@ function MiniStatusline.section_lsp(args)
 	if rawget(vim, "lsp") == nil then
 		return ""
 	end
-	local clients = vim.lsp.get_active_clients({ bufnr = 0 })
+	local clients = vim.lsp.get_clients({ bufnr = 0 })
 	if #clients == 0 then
 		return ""
 	end
