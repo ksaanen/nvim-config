@@ -1,4 +1,4 @@
-local treesitter = require("nvim-treesitter")
+local treesitter = require("nvim-treesitter.configs")
 treesitter.setup({
 	ensure_installed = {
 		"lua",
@@ -13,4 +13,6 @@ treesitter.setup({
 	auto_install = true,
 	highlight = { enable = true },
 	indent = { enable = true },
+	ignore_install = {},
+	sync_install = true
 })
