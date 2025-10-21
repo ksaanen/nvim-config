@@ -1,6 +1,8 @@
 -- Packages
 -- -----------------------------------------------------------------------------
 vim.pack.add({
+	-- nvim-lspconfig
+	{ src = 'https://github.com/neovim/nvim-lspconfig' },
 
 	-- Devicons
 	{ src = "https://github.com/nvim-tree/nvim-web-devicons" },
