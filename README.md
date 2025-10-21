@@ -39,6 +39,7 @@ Then add this to your shell config (~/.bashrc, ~/.zshrc, ...):
 - Install TypeScript and tsserver by running ```npm install -g typescript typescript-language-server```
 - Install Angular Language Service by running ```npm install -g @angular/language-service```
     - Make sure to install the Angular Language Service in your global npm packages at the same version as the project is using.
+- Install Some Sass Language server ```npm install -g some-sass-language-server```
 - Install Lua Language Server (https://luals.github.io/#neovim-install)
 - Install Rust toolchain (https://www.rust-lang.org/)
 - Install Rust Analyzer by running ```rustup component add rust-analyzer```

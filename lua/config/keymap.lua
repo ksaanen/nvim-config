@@ -24,13 +24,8 @@ vim.keymap.set("n", "<leader>fd", telescope_builtin.diagnostics, { desc = "[F]in
 vim.keymap.set("n", "<leader>fr", telescope_builtin.resume, { desc = "[F]ind [R]esume" })
 
 -- Lsp
-vim.keymap.set("n", "gD", vim.lsp.buf.declaration, { desc = "[G]o to [D]eclaration" })
-vim.keymap.set("n", "gd", vim.lsp.buf.definition, { desc = "[G]o to [D]efinition" })
-vim.keymap.set("n", "K", vim.lsp.buf.hover, { desc = "Hover Documentation" })
-vim.keymap.set("n", "gi", vim.lsp.buf.implementation, { desc = "[G]o to [I]mplementation" })
 vim.keymap.set("n", "<space>wa", vim.lsp.buf.add_workspace_folder, { desc = "[W]orkspace [A]dd Folder" })
 vim.keymap.set("n", "<space>wr", vim.lsp.buf.remove_workspace_folder, { desc = "[W]orkspace [R]emove Folder" })
 vim.keymap.set("n", "<space>wl", function()
 	print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
 end, { desc = "[W]orkspace [L]ist Folders" })
-vim.keymap.set("n", "gr", vim.lsp.buf.references, { desc = "[G]o to [R]eferences" })

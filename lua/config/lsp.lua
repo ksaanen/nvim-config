@@ -6,30 +6,50 @@ vim.lsp.enable("angularls")
 vim.lsp.enable("lua_ls")
 vim.lsp.enable("rust_analyzer")
 vim.lsp.enable("ts_ls")
+vim.lsp.enable("somesass_ls")
 
 vim.api.nvim_create_autocmd("LspAttach", {
+	group = vim.api.nvim_create_augroup('my.lsp', {}),
 	callback = function(args)
-		local client = vim.lsp.get_client_by_id(args.data.client_id)
-		if client == nil then
-			return
+		local client = assert(vim.lsp.get_client_by_id(args.data.client_id))
+
+		if client:supports_method('textDocument/implementation') then
+			vim.keymap.set("n", "gi", vim.lsp.buf.implementation, { desc = "[G]o to [I]mplementation" })
 		end
 
-		-- Autocomplete
-		if client:supports_method("textDocument/completion") then
+		if client:supports_method('textDocument/definition') then
+			vim.keymap.set("n", "gd", vim.lsp.buf.definition, { desc = "[G]o to [D]efinition" })
+		end
+
+		if client:supports_method('textDocument/declaration') then
+			vim.keymap.set("n", "gD", vim.lsp.buf.declaration, { desc = "[G]o to [D]eclaration" })
+		end
+
+		if client:supports_method('textDocument/references') then
+			vim.keymap.set("n", "gr", vim.lsp.buf.references, { desc = "[G]o to [R]eferences" })
+		end
+
+		if client:supports_method('textDocument/hover') then
+			vim.keymap.set("n", "K", vim.lsp.buf.hover, { desc = "Hover Documentation" })
+		end
+
+		if client:supports_method('textDocument/completion') then
+			-- Tweak autocomplete list behaviour
+			vim.cmd [[set completeopt+=menuone,noselect,popup]]
+
+			-- Enable autocompletion
 			vim.lsp.completion.enable(true, client.id, args.buf, { autotrigger = true })
-			vim.keymap.set("i", "<C-Space>", function()
-				vim.lsp.completion.get()
-			end)
+
+			vim.keymap.set("i", "<C-Space>", function() vim.lsp.completion.get() end,
+				{ desc = "Open autocomplete" })
 		end
 
-		-- Autoformat on save
+		-- Auto-format ("lint") on save.
 		-- Usually not needed if server supports "textDocument/willSaveWaitUntil".
-		if
-			not client:supports_method("textDocument/willSaveWaitUntil")
-			and client:supports_method("textDocument/formatting")
-		then
-			vim.api.nvim_create_autocmd("BufWritePre", {
-				group = vim.api.nvim_create_augroup("LSP", { clear = false }),
+		if not client:supports_method('textDocument/willSaveWaitUntil')
+		    and client:supports_method('textDocument/formatting') then
+			vim.api.nvim_create_autocmd('BufWritePre', {
+				group = vim.api.nvim_create_augroup('my.lsp', { clear = false }),
 				buffer = args.buf,
 				callback = function()
 					vim.lsp.buf.format({ bufnr = args.buf, id = client.id, timeout_ms = 1000 })
@@ -188,24 +208,24 @@ local function check_lsp_capabilities()
 		end
 
 		local capability_list = {
-			{ "Completion", caps.completionProvider },
-			{ "Hover", caps.hoverProvider },
-			{ "Signature Help", caps.signatureHelpProvider },
-			{ "Go to Definition", caps.definitionProvider },
-			{ "Go to Declaration", caps.declarationProvider },
-			{ "Go to Implementation", caps.implementationProvider },
-			{ "Go to Type Definition", caps.typeDefinitionProvider },
-			{ "Find References", caps.referencesProvider },
-			{ "Document Highlight", caps.documentHighlightProvider },
-			{ "Document Symbol", caps.documentSymbolProvider },
-			{ "Workspace Symbol", caps.workspaceSymbolProvider },
-			{ "Code Action", caps.codeActionProvider },
-			{ "Code Lens", caps.codeLensProvider },
-			{ "Document Formatting", caps.documentFormattingProvider },
+			{ "Completion",                caps.completionProvider },
+			{ "Hover",                     caps.hoverProvider },
+			{ "Signature Help",            caps.signatureHelpProvider },
+			{ "Go to Definition",          caps.definitionProvider },
+			{ "Go to Declaration",         caps.declarationProvider },
+			{ "Go to Implementation",      caps.implementationProvider },
+			{ "Go to Type Definition",     caps.typeDefinitionProvider },
+			{ "Find References",           caps.referencesProvider },
+			{ "Document Highlight",        caps.documentHighlightProvider },
+			{ "Document Symbol",           caps.documentSymbolProvider },
+			{ "Workspace Symbol",          caps.workspaceSymbolProvider },
+			{ "Code Action",               caps.codeActionProvider },
+			{ "Code Lens",                 caps.codeLensProvider },
+			{ "Document Formatting",       caps.documentFormattingProvider },
 			{ "Document Range Formatting", caps.documentRangeFormattingProvider },
-			{ "Rename", caps.renameProvider },
-			{ "Folding Range", caps.foldingRangeProvider },
-			{ "Selection Range", caps.selectionRangeProvider },
+			{ "Rename",                    caps.renameProvider },
+			{ "Folding Range",             caps.foldingRangeProvider },
+			{ "Selection Range",           caps.selectionRangeProvider },
 		}
 
 		for _, cap in ipairs(capability_list) do

@@ -4,6 +4,10 @@
       "rev": "f958d98",
       "src": "https://github.com/L3MON4D3/LuaSnip"
     },
+    "blink.cmp": {
+      "rev": "2cb0a71",
+      "src": "https://github.com/saghen/blink.cmp"
+    },
     "blink.nvim": {
       "rev": "16a597e",
       "src": "https://github.com/saghen/blink.nvim"
