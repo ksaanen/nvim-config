@@ -35,6 +35,7 @@ Then add this to your shell config (~/.bashrc, ~/.zshrc, ...):
 
 ### Additional steps needed for language support
 - Install NodeJS (https://nodejs.org/en/download/)
+- Install Tree-sitter-cli ```npm install -g tree-sitter-cli```
 - Install TypeScript and tsserver by running ```npm install -g typescript typescript-language-server```
 - Install Angular Language Service by running ```npm install -g @angular/language-service```
     - Make sure to install the Angular Language Service in your global npm packages at the same version as the project is using.
