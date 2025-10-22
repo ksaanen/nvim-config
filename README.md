@@ -13,6 +13,13 @@ sudo rm -rf /opt/nvim-linux-x86_64
 sudo tar -C /opt -xzf nvim-linux-x86_64.tar.gz
 ```
 
+To install Neovim (Nightly) on Linux, you can use the following commands to download and extract the latest nightly release:
+```
+curl -LO https://github.com/neovim/neovim/releases/download/nightly/nvim-linux-x86_64.tar.gz
+sudo rm -rf /opt/nvim-linux-x86_64
+sudo tar -C /opt -xzf nvim-linux-x86_64.tar.gz
+```
+
 Then add this to your shell config (~/.bashrc, ~/.zshrc, ...):
 ```export PATH="$PATH:/opt/nvim-linux-x86_64/bin"```
 
