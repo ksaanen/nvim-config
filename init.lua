@@ -48,7 +48,7 @@ require("plugins.mini")
 
 -- General Settings
 -- -----------------------------------------------------------------------------
-require("config.lsp")
-require("config.globals")
-require("config.options")
-require("config.keymap")
+require("core.lsp")
+require("core.globals")
+require("core.options")
+require("core.keymap")

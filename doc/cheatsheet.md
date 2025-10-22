@@ -107,6 +107,16 @@
 | Source config             | `:source %`        |
 | Execute Vimscript command | `:call function()` |
 
+## LSP Commands
+| Action                    | Command            |
+| ------------------------- | ------------------ |
+| Go to implementation      | `gi`               |
+| Go to definition          | `gd`               |
+| Go to declaration         | `gD`               |
+| Go to references          | `gr`               |
+| Code actions              | `<A-CR>`           |
+| Open autocomplete         | `<C-Space>`        |
+
 ## Workflow Tips
 | Tip                      | Description                                                         |
 | ------------------------ | ------------------------------------------------------------------- |
@@ -129,11 +139,16 @@
 | View help for key     | `:help i_CTRL-R`                   |
 | View help for option  | `:help 'number'` (note the quotes) |
 
-
 ## Custom Keymaps
 | Action                     | Command                          |
 | -------------------------- | -------------------------------- |
 | List buffers               | `Ctrl-b`                         |
+
+## Legenda
+| Name      | Key       |
+| --------- | --------- |
+| Alt       | `<A>`     |
+| Enter     | `<CR>`    |
 
 ## Common Configuration (init.lua or init.vim)
 ### Basics
