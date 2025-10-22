@@ -90,6 +90,15 @@
 | Find character forward / backward | `f<char>` / `F<char>` |
 | Until before character            | `t<char>` / `T<char>` |
 
+## Netrw
+| Action                    | Command                   |
+| ------------------------- | ------------------------- |
+| Toggle Netrw              | `<leader>e` or `:Lex`     |
+| Open Netrw                | `:Ex` or `:Explore`       |
+| Open Netrw (vert split)   | `:Vex` or `Vexplore`      |
+| Open preview              | `p`                       |
+| Close preview             | `Ctrl+z` + `z`            |
+
 ## Visual Mode Tricks
 | Action                  | Command               |
 | ----------------------- | --------------------- |
@@ -122,7 +131,6 @@
 | Tip                      | Description                                                         |
 | ------------------------ | ------------------------------------------------------------------- |
 | **Use leader key**       | Customize shortcuts: `map <leader>w :w<CR>`                         |
-| **Explore plugins**      | `:PackerSync`, `:Lazy`, or `:PlugInstall` depending on your manager |
 | **Set relative numbers** | `:set relativenumber` for better navigation                         |
 | **Use `.` often**        | Repeat last change — it’s powerful!                                 |
 | **Jump lists**           | `Ctrl+o` (back), `Ctrl+i` (forward)                                 |
