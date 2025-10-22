@@ -73,6 +73,7 @@
 | Split horizontally  | `:split` or `:sp`                   |
 | Split vertically    | `:vsplit` or `:vsp`                 |
 | Move between splits | `Ctrl+w` + arrow key (or `h/j/k/l`) |
+| Move to other window| `Ctrl+w` + `w`                      |
 | Resize split        | `Ctrl+w` + `>` / `<` / `+` / `-`    |
 | Close current split | `:q`                                |
 | New tab             | `:tabnew`                           |

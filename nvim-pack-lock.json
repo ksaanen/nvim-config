@@ -52,6 +52,10 @@
       "rev": "8a7cf7e",
       "src": "https://github.com/echasnovski/mini.nvim"
     },
+    "nerdtree": {
+      "rev": "690d061",
+      "src": "https://github.com/preservim/nerdtree"
+    },
     "nvim": {
       "rev": "af58927",
       "src": "https://github.com/catppuccin/nvim"

@@ -13,6 +13,9 @@ vim.keymap.set("n", "<C-k>", "<C-w><C-k>", { desc = "Move focus to the upper win
 -- Buffers
 vim.keymap.set("n", "<C-b>", ":buffers<CR>:buffer<Space>")
 
+-- Netrw
+vim.keymap.set("n", "<leader>e", ":Lex<cr>", { desc = "Toggle Netrw" })
+
 -- Telescope
 local telescope_builtin = require("telescope.builtin")
 vim.keymap.set("n", "<leader>ff", telescope_builtin.find_files, { desc = "[F]ind [F]iles" })
