@@ -17,16 +17,19 @@ vim.keymap.set("n", "<C-b>", ":buffers<CR>:buffer<Space>", { desc = "List buffer
 vim.keymap.set("n", "<leader>e", ":Lex<cr>", { desc = "Toggle Netrw" })
 
 -- Marks
-vim.keymap.set("n", "<C-m>", ":marks<cr>:mark<Space>", { desc = "List marks and select" })
-vim.keymap.set("n", "<leader>dm!", ":delm!<cr>", { desc = "[D]elete [M]arks in current buffer" })
+--vim.keymap.set("n", "<C-m>", ":marks<cr>:mark<Space>", { desc = "List marks and select" })
+vim.keymap.set("n", "<leader>ml", ":marks<cr>", { desc = "[M]arks [L]ist" })
+vim.keymap.set("n", "<leader>md!", ":delm!<cr>", { desc = "[M]arks [D]elete all in current buffer" })
+
 local chars = "abcdefghijklmnopqrstuvwxyz0123456789"
 for i = 1, #chars do
 	local lower_letter = chars:sub(i, i)
 	local upper_letter = string.upper(lower_letter)
-	vim.keymap.set("n", "<leader>dm" .. lower_letter, ":dm" .. lower_letter .. "<cr>",
-		{ desc = "[D]elete [M]ark " .. upper_letter })
+	vim.keymap.set("n", "<leader>gm" .. lower_letter, "'" .. lower_letter .. "<cr>",
+		{ desc = "[G]o to [M]ark " .. upper_letter })
+	vim.keymap.set("n", "<leader>md" .. lower_letter, ":delm " .. lower_letter .. "<cr>",
+		{ desc = "[M]ark [D]elete " .. upper_letter })
 end
-
 
 -- Telescope
 local telescope_builtin = require("telescope.builtin")
