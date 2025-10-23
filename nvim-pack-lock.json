@@ -48,6 +48,10 @@
       "rev": "da369d9",
       "src": "https://github.com/github/copilot.vim"
     },
+    "marks.nvim": {
+      "rev": "f353e8c",
+      "src": "https://github.com/chentoast/marks.nvim"
+    },
     "mini.nvim": {
       "rev": "8a7cf7e",
       "src": "https://github.com/echasnovski/mini.nvim"

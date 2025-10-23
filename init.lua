@@ -23,6 +23,9 @@ vim.pack.add({
 	-- Treesitter / fileparsers
 	{ src = "https://github.com/nvim-treesitter/nvim-treesitter" },
 
+	-- Marks
+	{ src = "https://github.com/chentoast/marks.nvim" },
+
 	-- Copilot
 	{ src = "https://github.com/github/copilot.vim" },
 })
@@ -35,6 +38,7 @@ require("plugins.which-key")
 require("plugins.telescope")
 require("plugins.treesitter")
 require("plugins.mini")
+require("plugins.marks")
 
 -- General Settings
 -- -----------------------------------------------------------------------------

@@ -16,6 +16,18 @@ vim.keymap.set("n", "<C-b>", ":buffers<CR>:buffer<Space>")
 -- Netrw
 vim.keymap.set("n", "<leader>e", ":Lex<cr>", { desc = "Toggle Netrw" })
 
+-- Marks
+vim.keymap.set("n", "<leader>lm", ":marks<cr>", { desc = "[L]ist [M]arks" })
+vim.keymap.set("n", "<leader>dm!", ":delm!<cr>", { desc = "[D]elete [M]arks in current buffer" })
+local chars = "abcdefghijklmnopqrstuvwxyz0123456789"
+for i = 1, #chars do
+	local lower_letter = chars:sub(i, i)
+	local upper_letter = string.upper(lower_letter)
+	vim.keymap.set("n", "<leader>dm" .. lower_letter, ":dm" .. lower_letter .. "<cr>",
+		{ desc = "[D]elete [M]ark " .. upper_letter })
+end
+
+
 -- Telescope
 local telescope_builtin = require("telescope.builtin")
 vim.keymap.set("n", "<leader>ff", telescope_builtin.find_files, { desc = "[F]ind [F]iles" })
