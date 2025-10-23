@@ -9,7 +9,6 @@ vim.opt.winborder = "rounded"
 vim.g.netrw_preview = 1
 vim.g.netrw_winsize = 25
 vim.g.netrw_liststyle = 3
-vim.g.netrw_browse_split = 4
 
 -- Smart searching
 -- '/pattern' will search case insensitive.

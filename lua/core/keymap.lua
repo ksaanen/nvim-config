@@ -11,13 +11,13 @@ vim.keymap.set("n", "<C-j>", "<C-w><C-j>", { desc = "Move focus to the lower win
 vim.keymap.set("n", "<C-k>", "<C-w><C-k>", { desc = "Move focus to the upper window" })
 
 -- Buffers
-vim.keymap.set("n", "<C-b>", ":buffers<CR>:buffer<Space>")
+vim.keymap.set("n", "<C-b>", ":buffers<CR>:buffer<Space>", { desc = "List buffers and select" })
 
 -- Netrw
 vim.keymap.set("n", "<leader>e", ":Lex<cr>", { desc = "Toggle Netrw" })
 
 -- Marks
-vim.keymap.set("n", "<leader>lm", ":marks<cr>", { desc = "[L]ist [M]arks" })
+vim.keymap.set("n", "<C-m>", ":marks<cr>:mark<Space>", { desc = "List marks and select" })
 vim.keymap.set("n", "<leader>dm!", ":delm!<cr>", { desc = "[D]elete [M]arks in current buffer" })
 local chars = "abcdefghijklmnopqrstuvwxyz0123456789"
 for i = 1, #chars do
