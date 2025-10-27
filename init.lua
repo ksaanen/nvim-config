@@ -12,10 +12,11 @@ vim.pack.add({
 
 	-- Telescope
 	{ src = "https://github.com/nvim-lua/plenary.nvim" },
-	{ src = "https://github.com/nvim-telescope/telescope.nvim",  branch = "0.1.x" },
+	{ src = "https://github.com/nvim-telescope/telescope-fzf-native.nvim", run = "make" },
+	{ src = "https://github.com/nvim-telescope/telescope.nvim",            branch = "0.1.x" },
 
 	-- Tokyonight colorscheme
-	{ src = "https://github.com/folke/tokyonight.nvim",          name = "tokyonight" },
+	{ src = "https://github.com/folke/tokyonight.nvim",                    name = "tokyonight" },
 
 	-- Mini / statusline
 	{ src = "https://github.com/echasnovski/mini.nvim" },

@@ -29,12 +29,19 @@ Then add this to your shell config (~/.bashrc, ~/.zshrc, ...):
 - Install Build Tools ```sudo apt install build-essential```
 - Install CMake ```sudo apt install cmake```
 
+## Manual build steps
+This setup uses native fzf which requires the fzf package to be installed. Go to the plugin directory for fzf:
+```~/.local/share/nvim/site/pack/core/opt/telescope-fzf-native.nvim```
+And run:
+```make```
+
 ## Features
 - Build-in LSP (https://github.com/neovim/nvim-lspconfig)
 - Telescope (https://github.com/nvim-telescope/telescope.nvim)
 
 ## Language support
 - Angular
+- Json
 - Lua
 - Rust
 - Sass/Scss
@@ -50,6 +57,12 @@ Then add this to your shell config (~/.bashrc, ~/.zshrc, ...):
 - Install Lua Language Server (https://luals.github.io/#neovim-install)
 - Install Rust toolchain (https://www.rust-lang.org/)
 - Install Rust Analyzer by running ```rustup component add rust-analyzer```
+
+## Nerd Font
+For enabling Nerd Fonts icons the terminal should be configured to make use of one downloaded from:
+```https://www.nerdfonts.com/```
+For example JetBrains Mono:
+```https://github.com/ryanoasis/nerd-fonts/releases/download/v3.4.0/JetBrainsMono.zip```
 
 ## Usage
 Have a look at the cheatsheet.md or run ```:help cheatsheet``` inside Neovim for a quick reference of commands and features.
