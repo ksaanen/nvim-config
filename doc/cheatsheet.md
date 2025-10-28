@@ -54,6 +54,17 @@
 | Substitute globally   | `:%s/old/new/g`  |
 | Confirm each change   | `:%s/old/new/gc` |
 
+## Quickfix list
+| Action                | Command          |
+| --------------------- | ---------------- |
+| Open quickfix list    | `:copen`         |
+| Close quickfix list   | `:cclose`        |
+| Go to next match      | `:cnext`         |
+| Go to previous match  | `:cprev`         |
+| Go to first match     | `:cfirst`        |
+| Go to last match      | `:clast`         |
+
+
 ## File Management
 | Action              | Command            |
 | ------------------- | ------------------ |

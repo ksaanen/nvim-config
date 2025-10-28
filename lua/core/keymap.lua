@@ -11,7 +11,7 @@ vim.keymap.set("n", "<C-j>", "<C-w><C-j>", { desc = "Move focus to the lower win
 vim.keymap.set("n", "<C-k>", "<C-w><C-k>", { desc = "Move focus to the upper window" })
 
 -- Buffers
-vim.keymap.set("n", "<C-b>", ":buffers<CR>:buffer<Space>", { desc = "List buffers and select" })
+vim.keymap.set("n", "<C-b>", ":buffers<cr>:buffer<Space>", { desc = "List buffers and select" })
 
 -- Netrw
 vim.keymap.set("n", "<leader>ld", ":Lex %:h<cr>", { desc = "Toggle Netrw [L]explore current [D]irectory" })
@@ -33,6 +33,14 @@ for i = 1, #chars do
 	vim.keymap.set("n", "<leader>md" .. lower_letter, ":delm " .. lower_letter .. "<cr>",
 		{ desc = "[M]ark [D]elete " .. upper_letter })
 end
+
+local function vimgrep_pattern()
+	local pattern = vim.fn.input("vimgrep pattern:")
+	vim.api.nvim_command(":vimgrep /" .. pattern .. "/g **/* <CR>")
+end
+vim.keymap.set("n", "<leader>vg", function() vimgrep_pattern() end, { desc = "[V]im[G]rep a string" })
+vim.keymap.set("n", "<leader>co", ":copen<CR>", { desc = "[O]pen QuickFix list" })
+vim.keymap.set("n", "<leader>cl", ":cclose<CR>", { desc = "[C]lose QuickFix list" })
 
 -- Telescope
 local telescope_builtin = require("telescope.builtin")

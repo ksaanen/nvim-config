@@ -25,5 +25,5 @@ vim.api.nvim_create_autocmd("VimEnter", {
 vim.opt.ignorecase = true
 vim.opt.smartcase = true
 
-vim.opt.listchars = { eol = "$", tab = "  " }
---vim.opt.list = true
+-- for preview while search/replace
+vim.opt.inccommand = "split"
