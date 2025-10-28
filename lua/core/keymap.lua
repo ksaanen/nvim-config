@@ -39,8 +39,8 @@ local function vimgrep_pattern()
 	vim.api.nvim_command(":vimgrep /" .. pattern .. "/g **/* <CR>")
 end
 vim.keymap.set("n", "<leader>vg", function() vimgrep_pattern() end, { desc = "[V]im[G]rep a string" })
-vim.keymap.set("n", "<leader>co", ":copen<CR>", { desc = "[O]pen QuickFix list" })
-vim.keymap.set("n", "<leader>cl", ":cclose<CR>", { desc = "[C]lose QuickFix list" })
+vim.keymap.set("n", "<leader>qo", ":copen<CR>", { desc = "[Q]uickFix [O]pen list" })
+vim.keymap.set("n", "<leader>qc", ":cclose<CR>", { desc = "[Q]uickFix [C]lose list" })
 
 -- Telescope
 local telescope_builtin = require("telescope.builtin")
