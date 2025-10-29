@@ -1,3 +1,7 @@
+--[[
+--
+-- Add code actions in quickfix list upon saving *.ts files
+--
 vim.api.nvim_create_autocmd("BufWritePre", {
 	group = vim.api.nvim_create_augroup("TS_add_missing_imports", { clear = true }),
 	desc = "TS_add_missing_imports",
@@ -12,3 +16,4 @@ vim.api.nvim_create_autocmd("BufWritePre", {
 		vim.cmd("write")
 	end,
 })
+--]]

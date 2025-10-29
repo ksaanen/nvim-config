@@ -58,3 +58,12 @@ vim.keymap.set("n", "<space>wr", vim.lsp.buf.remove_workspace_folder, { desc = "
 vim.keymap.set("n", "<space>wl", function()
 	print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
 end, { desc = "[W]orkspace [L]ist Folders" })
+
+-- Code actions
+vim.keymap.set("n", "<leader>am", function()
+		vim.lsp.buf.code_action({ apply = true, context = { only = "source.addMissingImports" } })
+	end,
+	{ desc = "[A]dd [M]issing imports" })
+vim.keymap.set("n", "<leader>fa",
+	function() vim.lsp.buf.code_action({ apply = true, context = { only = "source.fixAll" } }) end,
+	{ desc = "[F]ix [A]ll issues" })
