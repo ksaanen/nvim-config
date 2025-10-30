@@ -64,7 +64,6 @@
 | Go to first match     | `:cfirst`        |
 | Go to last match      | `:clast`         |
 
-
 ## File Management
 | Action              | Command            |
 | ------------------- | ------------------ |
@@ -146,6 +145,7 @@
 | **Use `.` often**        | Repeat last change — it’s powerful!                                 |
 | **Jump lists**           | `Ctrl+o` (back), `Ctrl+i` (forward)                                 |
 | **Macro recording**      | `q<register>` to start, `q` to stop, `@<register>` to replay        |
+| **Quickfix list**        | `Ctrl+q` when in telescope, the result will be put to quickfix list |
 
 ## How to Use Help Buffers
 | Action                | Command                            |
