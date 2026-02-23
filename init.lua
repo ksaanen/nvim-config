@@ -27,11 +27,12 @@ vim.pack.add({
 	-- Marks
 	{ src = "https://github.com/chentoast/marks.nvim" },
 
-	-- Copilot
-	{ src = "https://github.com/github/copilot.vim" },
+	-- Blink Autocomplete
+	{ src = "https://github.com/saghen/blink.cmp", branch = '1.*' },
+
 })
 
--- Init tokyonight color scheme
+-- Init tokyonight color schemeq
 vim.cmd.colorscheme("tokyonight-moon")
 
 -- Load plugin configurations
@@ -40,6 +41,7 @@ require("plugins.telescope")
 require("plugins.treesitter")
 require("plugins.mini")
 require("plugins.marks")
+require("plugins.blink")
 
 -- General Settings
 -- -----------------------------------------------------------------------------
