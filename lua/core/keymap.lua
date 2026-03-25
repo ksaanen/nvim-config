@@ -3,6 +3,7 @@
 -- -----------------------
 local util = require("core.util");
 local telescope_builtin = require("telescope.builtin")
+local nvim_tree_api = require("nvim-tree.api")
 
 -- Keybinds to make split navigation easier.
 -- Use CTRL+<hjkl> to switch between windows
@@ -22,7 +23,7 @@ vim.keymap.set("n", "<C-b>", ":buffers<cr>:buffer<Space>", { desc = "List buffer
 -- vim.keymap.set("n", "<leader>e", ":Ex<cr>", { desc = "Open Netrw [E]plore" })
 
 -- Nvim Tree
-vim.keymap.set("n", "<C-t>", ":NvimTreeToggle<cr>", { desc = "[T]oggle NvimTree"})
+vim.keymap.set("n", "<C-t>", function() nvim_tree_api.tree.toggle() end, { desc = "[T]oggle NvimTree"})
 
 -- Marks
 --vim.keymap.set("n", "<C-m>", ":marks<cr>:mark<Space>", { desc = "List marks and select" })
