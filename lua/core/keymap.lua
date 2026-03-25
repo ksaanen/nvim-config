@@ -16,10 +16,13 @@ vim.keymap.set("n", "<C-k>", "<C-w><C-k>", { desc = "Move focus to the upper win
 vim.keymap.set("n", "<C-b>", ":buffers<cr>:buffer<Space>", { desc = "List buffers and select" })
 
 -- Netrw
-vim.keymap.set("n", "<leader>ld", ":Lex %:h<cr>", { desc = "Toggle Netrw [L]explore current [D]irectory" })
-vim.keymap.set("n", "<leader>le", ":Lex<cr>", { desc = "Toggle Netrw [L]explore" })
-vim.keymap.set("n", "<leader>ve", ":Vex<cr>", { desc = "Open Netrw [V]explore" })
-vim.keymap.set("n", "<leader>e", ":Ex<cr>", { desc = "Open Netrw [E]plore" })
+-- vim.keymap.set("n", "<leader>ld", ":Lex %:h<cr>", { desc = "Toggle Netrw [L]explore current [D]irectory" })
+-- vim.keymap.set("n", "<leader>le", ":Lex<cr>", { desc = "Toggle Netrw [L]explore" })
+-- vim.keymap.set("n", "<leader>ve", ":Vex<cr>", { desc = "Open Netrw [V]explore" })
+-- vim.keymap.set("n", "<leader>e", ":Ex<cr>", { desc = "Open Netrw [E]plore" })
+
+-- Nvim Tree
+vim.keymap.set("n", "<C-t>", ":NvimTreeToggle<cr>", { desc = "[T]oggle NvimTree"})
 
 -- Marks
 --vim.keymap.set("n", "<C-m>", ":marks<cr>:mark<Space>", { desc = "List marks and select" })

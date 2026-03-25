@@ -88,6 +88,10 @@
       "rev": "b9fd522",
       "src": "https://github.com/nvim-lua/plenary.nvim"
     },
+    "rustaceanvim": {
+      "rev": "f85cfdbdb083ec734eb3f3d79d588dece6f2c82d",
+      "src": "https://github.com/mrcjkb/rustaceanvim"
+    },
     "telescope-fzf-native.nvim": {
       "rev": "1f08ed6",
       "src": "https://github.com/nvim-telescope/telescope-fzf-native.nvim"

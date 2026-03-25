@@ -30,18 +30,13 @@ vim.pack.add({
 	-- Blink Autocomplete
 	{ src = "https://github.com/saghen/blink.cmp", branch = '1.*' },
 
+	-- Nvim Tree / filemanager
+	{ src = "https://github.com/nvim-tree/nvim-tree.lua" },
+	{ src = "https://github.com/nvim-tree/nvim-web-devicons"}
 })
 
 -- Init tokyonight color schemeq
 vim.cmd.colorscheme("tokyonight-moon")
-
--- Load plugin configurations
-require("plugins.which-key")
-require("plugins.telescope")
-require("plugins.treesitter")
-require("plugins.mini")
-require("plugins.marks")
-require("plugins.blink")
 
 -- General Settings
 -- -----------------------------------------------------------------------------
@@ -50,3 +45,13 @@ require("core.globals")
 require("core.options")
 require("core.keymap")
 require("core.autocmds")
+
+-- Load plugin configurations
+require("plugins.which-key")
+require("plugins.telescope")
+require("plugins.treesitter")
+require("plugins.mini")
+require("plugins.marks")
+require("plugins.blink")
+require("plugins.nvim-tree")
+
