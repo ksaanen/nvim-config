@@ -2,8 +2,6 @@
 -- Global settings
 -- -----------------------
 
-vim.opt.winborder = "rounded"
-
 -- Netrw settings
 -- vim.g.netrw_banner = 0 -- Disables help banner at the top of the window
 -- vim.g.netrw_preview = 1
@@ -16,24 +14,12 @@ vim.opt.winborder = "rounded"
 --	end
 --})
 
+-- leader key
+vim.g.mapleader = " "
+vim.g.maplocalleader = " "
 
 -- Disable netrw (for Nvim Tree plugin) 
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
 
--- Optionally enable 24-bit colour
-vim.opt.termguicolors = true
 
-
-
-
--- Smart searching
--- '/pattern' will search case insensitive.
--- '/Pattern' will search case sensitive because op the capital P.
--- '/pattern\C' will search case sensitive
--- '/Pattern\c' will search case insensitive
-vim.opt.ignorecase = true
-vim.opt.smartcase = true
-
--- for preview while search/replace
-vim.opt.inccommand = "split"
