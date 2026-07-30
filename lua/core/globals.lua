@@ -22,4 +22,5 @@ vim.g.maplocalleader = " "
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
 
-
+-- New UI opt-in
+require('vim._core.ui2').enable({})
