@@ -8,6 +8,7 @@ vim.lsp.enable("rust_analyzer")
 --vim.lsp.enable("ts_ls")
 vim.lsp.enable("tsgo")
 vim.lsp.enable("somesass_ls")
+vim.lsp.enable("biome")
 
 vim.api.nvim_create_autocmd("LspAttach", {
 	group = vim.api.nvim_create_augroup('my.lsp', {}),
@@ -16,13 +17,34 @@ vim.api.nvim_create_autocmd("LspAttach", {
 
 		-- Auto-format ("lint") on save.
 		-- Usually not needed if server supports "textDocument/willSaveWaitUntil".
-		if not client:supports_method('textDocument/willSaveWaitUntil')
+		if client.name ~= "biome"
+		    and not client:supports_method('textDocument/willSaveWaitUntil')
 		    and client:supports_method('textDocument/formatting') then
 			vim.api.nvim_create_autocmd('BufWritePre', {
 				group = vim.api.nvim_create_augroup('my.lsp', { clear = false }),
 				buffer = args.buf,
 				callback = function()
 					vim.lsp.buf.format({ bufnr = args.buf, id = client.id, timeout_ms = 1000 })
+				end,
+			})
+		end
+
+		-- When the client is Biome, add an automatic event on
+		-- save that runs Biome's "source.fixAll.biome" code action.
+		-- This takes care of things like JSX props sorting and
+		-- removing unused imports.
+		if client.name == "biome" then
+			vim.api.nvim_create_autocmd("BufWritePre", {
+				group = vim.api.nvim_create_augroup("BiomeFixAll", { clear = false }),
+				buffer = args.buf,
+				callback = function()
+					vim.lsp.buf.code_action({
+						context = {
+							only = { "source.fixAll.biome" },
+							diagnostics = {},
+						},
+						apply = true,
+					})
 				end,
 			})
 		end

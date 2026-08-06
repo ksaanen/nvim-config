@@ -24,3 +24,4 @@ vim.g.loaded_netrwPlugin = 1
 
 -- New UI opt-in
 require('vim._core.ui2').enable({})
+

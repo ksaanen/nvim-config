@@ -13,10 +13,10 @@ vim.pack.add({
 	-- Telescope
 	{ src = "https://github.com/nvim-lua/plenary.nvim" },
 	{ src = "https://github.com/nvim-telescope/telescope-fzf-native.nvim", run = "make" },
-	{ src = "https://github.com/nvim-telescope/telescope.nvim",            branch = "0.2.x" },
+	{ src = "https://github.com/nvim-telescope/telescope.nvim", branch = "0.2.x" },
 
 	-- Tokyonight colorscheme
-	{ src = "https://github.com/folke/tokyonight.nvim",                    name = "tokyonight" },
+	{ src = "https://github.com/folke/tokyonight.nvim", name = "tokyonight" },
 
 	-- Mini / statusline
 	{ src = "https://github.com/echasnovski/mini.nvim" },
@@ -29,6 +29,9 @@ vim.pack.add({
 
 	-- Blink Autocomplete
 	{ src = "https://github.com/saghen/blink.cmp", branch = '1.*' },
+
+	-- Autoformat
+	{ src = "https://github.com/stevearc/conform.nvim"},
 
 	-- Nvim Tree / filemanager
 	{ src = "https://github.com/nvim-tree/nvim-tree.lua" },
@@ -54,4 +57,5 @@ require("plugins.mini")
 require("plugins.marks")
 require("plugins.blink")
 require("plugins.nvim-tree")
+require("plugins.conform")
 

@@ -61,3 +61,11 @@ vim.keymap.set("n", "<leader>am",
 vim.keymap.set("n", "<leader>fa",
 	function() vim.lsp.buf.code_action({ apply = true, context = { only = "source.fixAll" } }) end,
 	{ desc = "[F]ix [A]ll issues" })
+
+vim.keymap.set("n", "<leader>oi",
+	function() vim.lsp.buf.code_action({ apply = true, context = { only = { "source.organizeImports.ts" }, diagnostics = {} } }) end,
+	{ desc = "[O]rganize [I]mports" })
+
+vim.keymap.set("n", "<leader>ai",
+	function() vim.lsp.buf.code_action({ apply = true, context = { only = { "source.addMissingImports.ts" }, diagnostics = {} } }) end,
+	{ desc = "[A]dd missing [I]mports" })
