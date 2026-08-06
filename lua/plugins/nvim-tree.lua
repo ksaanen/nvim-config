@@ -3,7 +3,7 @@ local config = {
         sorter = "case_sensitive",
     },
     view = {
-        width = 50,
+        width = 35,
     },
     renderer = {
         group_empty = true,
@@ -14,6 +14,8 @@ local config = {
 }
 require("nvim-tree").setup(config)
 
+
+-- Have nvim-tree focus on active buffer.
 local api = require("nvim-tree.api")
 
 vim.api.nvim_create_autocmd("BufEnter", {
