@@ -59,3 +59,9 @@ require("plugins.blink")
 require("plugins.nvim-tree")
 require("plugins.conform")
 
+-- Load (optional) local config
+local local_config = vim.fn.stdpath("config") .. "/lua/local.lua"
+if vim.uv.fs_stat(local_config) then
+  require("local")
+end
+
