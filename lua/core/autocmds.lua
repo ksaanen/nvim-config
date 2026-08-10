@@ -41,4 +41,13 @@ vim.api.nvim_create_autocmd("LspAttach", {
 	end
 })
 
+-- Automatic hover
+vim.opt.updatetime = 500
 
+vim.api.nvim_create_autocmd("CursorHold", {
+  callback = function()
+    if #vim.lsp.get_clients({ bufnr = 0 }) > 0 then
+      vim.lsp.buf.hover()
+    end
+  end,
+})
