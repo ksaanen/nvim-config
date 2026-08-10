@@ -11,7 +11,7 @@ treesitter.setup({
 	},
 	-- Autoinstall languages that are not installed
 	auto_install = true,
-	highlight = { enable = true },
+	highlight = { enable = false },
 	indent = { enable = true },
 	ignore_install = {},
 	sync_install = true
