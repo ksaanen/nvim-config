@@ -27,3 +27,9 @@ vim.opt.smartcase = true
 
 -- for preview while search/replace
 vim.opt.inccommand = "split"
+
+-- prevent the built-in vim.lsp.completion autotrigger from selecting the first item
+-- menuone - Use the popup menu also when there is only one match. Useful when there is additional information about the match, e.g., what file it comes from.
+-- noselect - Same as “noinsert”, except that no menu item is pre-selected. If both “noinsert” and “noselect” are present, “noselect” has precedence.
+-- popup - Show extra information about the currently selected completion in a popup window. Only works in combination with “menu” or “menuone”. Overrides “preview”.
+vim.opt.completeopt = { "menuone", "noselect", "popup" } 
