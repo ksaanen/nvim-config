@@ -35,7 +35,10 @@ vim.pack.add({
 
 	-- Nvim Tree / filemanager
 	{ src = "https://github.com/nvim-tree/nvim-tree.lua" },
-	{ src = "https://github.com/nvim-tree/nvim-web-devicons"}
+	{ src = "https://github.com/nvim-tree/nvim-web-devicons"},
+
+	-- Bufferline	
+	{ src = "https://github.com/akinsho/bufferline.nvim" }
 })
 
 -- Init tokyonight color schemeq
@@ -58,6 +61,7 @@ require("plugins.marks")
 require("plugins.blink")
 require("plugins.nvim-tree")
 require("plugins.conform")
+require("plugins.bufferline")
 
 -- Load (optional) local config
 local local_config = vim.fn.stdpath("config") .. "/lua/local.lua"
