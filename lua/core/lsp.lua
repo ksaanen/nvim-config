@@ -1,80 +1,93 @@
--- -----------------------
+-- ============================================================================
 -- LSP Configuration
--- -----------------------
+-- ============================================================================
+-- Requires:
+--   - Neovim 0.11+
+--   - nvim-lspconfig
+--
+-- Architecture:
+--   * vim.lsp.config() / vim.lsp.enable() only
+--   * One shared LspAttach handler
+--   * Built-in LSP completion
+--   * Biome owns formatting/fixes for JS/TS/CSS/etc.
+--   * tsgo provides TypeScript/JavaScript language intelligence
+--   * rust-analyzer diagnostics disabled
+-- ============================================================================
 
-vim.lsp.enable("angularls")
-vim.lsp.enable("lua_ls")
-vim.lsp.enable("rust_analyzer")
---vim.lsp.enable("ts_ls")
-vim.lsp.enable("tsgo")
-vim.lsp.enable("somesass_ls")
-vim.lsp.enable("biome")
 
-vim.api.nvim_create_autocmd("LspAttach", {
-	group = vim.api.nvim_create_augroup('my.lsp', {}),
-	callback = function(args)
-		local client = assert(vim.lsp.get_client_by_id(args.data.client_id))
+-- ============================================================================
+-- Shared LSP behavior
+-- ============================================================================
 
-		-- Auto-format ("lint") on save.
-		-- Usually not needed if server supports "textDocument/willSaveWaitUntil".
-		if client.name ~= "biome"
-		    and not client:supports_method('textDocument/willSaveWaitUntil')
-		    and client:supports_method('textDocument/formatting') then
-			vim.api.nvim_create_autocmd('BufWritePre', {
-				group = vim.api.nvim_create_augroup('my.lsp', { clear = false }),
-				buffer = args.buf,
-				callback = function()
-					vim.lsp.buf.format({ bufnr = args.buf, id = client.id, timeout_ms = 1000 })
-				end,
-			})
-		end
+local function on_attach(client, bufnr)
+	-- --------------------------------------------------------------------------
+	-- Built-in LSP completion
+	-- --------------------------------------------------------------------------
+	--
+	-- Neovim 0.11+ supports completion directly through vim.lsp.completion.
+	--
+	-- `convert` removes function signatures from the completion menu while
+	-- retaining the original completion item underneath.
+	--
+	vim.lsp.completion.enable(true, client.id, bufnr, {
+		autotrigger = true,
 
-		-- When the client is Biome, add an automatic event on
-		-- save that runs Biome's "source.fixAll.biome" code action.
-		-- This takes care of things like JSX props sorting and
-		-- removing unused imports.
-		if client.name == "biome" then
-			vim.api.nvim_create_autocmd("BufWritePre", {
-				group = vim.api.nvim_create_augroup("BiomeFixAll", { clear = false }),
-				buffer = args.buf,
-				callback = function()
-					vim.lsp.buf.code_action({
-						context = {
-							only = { "source.fixAll.biome" },
-							diagnostics = {},
-						},
-						apply = true,
-					})
-				end,
-			})
-		end
-	end,
+		convert = function(item)
+			return {
+				abbr = item.label:gsub("%b()", ""),
+			}
+		end,
+	})
+
+	vim.keymap.set("i", "<C-Space>", vim.lsp.completion.get, {
+		buffer = bufnr,
+		desc = "Trigger LSP completion",
+	})
+end
+
+
+-- ============================================================================
+-- Server configuration
+-- ============================================================================
+
+-- Lua
+vim.lsp.config("lua_ls", {
+	settings = {
+		Lua = {
+			runtime = {
+				version = "LuaJIT",
+			},
+
+			diagnostics = {
+				globals = {
+					"vim",
+					"require",
+				},
+			},
+
+			workspace = {
+				library = vim.api.nvim_get_runtime_file("", true),
+				checkThirdParty = false,
+			},
+
+			telemetry = {
+				enable = false,
+			},
+		},
+	},
 })
 
-vim.diagnostic.config({
-	--virtual_lines = true,
-	virtual_text = true,
-	underline = true,
-	severity_sort = true,
-	float = {
-		border = "rounded",
-		source = true,
-	},
-	signs = {
-		text = {
-			[vim.diagnostic.severity.ERROR] = "󰅚 ",
-			[vim.diagnostic.severity.WARN] = "󰀪 ",
-			[vim.diagnostic.severity.INFO] = "󰋽 ",
-			[vim.diagnostic.severity.HINT] = "󰌶 ",
-		},
-		numhl = {
-			[vim.diagnostic.severity.ERROR] = "ErrorMsg",
-			[vim.diagnostic.severity.WARN] = "WarningMsg",
-		},
-	},
-})
 
--- Disable rust-analyzer diagnostics
+-- Rust
+--
+-- rust-analyzer remains enabled for:
+--   * completion
+--   * hover
+--   * navigation
+--   * code actions
+--   * semantic information
+--
+-- but diagnostics are disabled because another tool/workflow is handling them.
 vim.lsp.config("rust_analyzer", {
 	settings = {
 		["rust-analyzer"] = {
@@ -85,41 +98,168 @@ vim.lsp.config("rust_analyzer", {
 	},
 })
 
-vim.lsp.config("lua_ls", {
-	settings = {
-		Lua = {
-			runtime = {
-				-- Tell the language server which version of Lua you're using
-				-- (most likely LuaJIT in the case of Neovim)
-				version = "LuaJIT",
-			},
-			diagnostics = {
-				-- Get the language server to recognize the `vim` global
-				globals = {
-					"vim",
-					"require",
+
+-- ============================================================================
+-- Formatting policy
+-- ============================================================================
+
+-- Servers that should NOT participate in automatic formatting.
+--
+-- This is particularly important for JS/TS where tsgo and Biome can both
+-- expose formatting capabilities.
+local formatters = {
+	biome = true,
+}
+
+
+local function format_on_save(client, bufnr)
+	-- Only Biome is allowed to format automatically.
+	if not formatters[client.name] then
+		return
+	end
+
+	if not client:supports_method("textDocument/formatting") then
+		return
+	end
+
+	vim.api.nvim_create_autocmd("BufWritePre", {
+		group = vim.api.nvim_create_augroup(
+			"LspFormat." .. client.id,
+			{ clear = true }
+		),
+		buffer = bufnr,
+
+		callback = function()
+			vim.lsp.buf.format({
+				bufnr = bufnr,
+				id = client.id,
+				timeout_ms = 1000,
+			})
+		end,
+	})
+end
+
+
+-- ============================================================================
+-- Biome fix-all on save
+-- ============================================================================
+
+local function biome_fix_on_save(client, bufnr)
+	if client.name ~= "biome" then
+		return
+	end
+
+	if not client:supports_method("textDocument/codeAction") then
+		return
+	end
+
+	vim.api.nvim_create_autocmd("BufWritePre", {
+		group = vim.api.nvim_create_augroup(
+			"BiomeFix." .. client.id,
+			{ clear = true }
+		),
+		buffer = bufnr,
+
+		callback = function()
+			vim.lsp.buf.code_action({
+				context = {
+					only = {
+						"source.fixAll.biome",
+					},
+					diagnostics = {},
 				},
-			},
-			workspace = {
-				-- Make the server aware of Neovim runtime files
-				library = vim.api.nvim_get_runtime_file("", true),
-			},
-			-- Do not send telemetry data containing a randomized but unique identifier
-			telemetry = {
-				enable = false,
-			},
+
+				-- Apply automatically when there is exactly one action.
+				apply = true,
+			})
+		end,
+	})
+end
+
+
+-- ============================================================================
+-- LspAttach
+-- ============================================================================
+
+vim.api.nvim_create_autocmd("LspAttach", {
+	group = vim.api.nvim_create_augroup("my.lsp", { clear = true }),
+
+	callback = function(args)
+		local client = assert(
+			vim.lsp.get_client_by_id(args.data.client_id)
+		)
+
+		local bufnr = args.buf
+
+		-- Shared behavior for every server.
+		on_attach(client, bufnr)
+
+		-- Only configured formatter(s) format on save.
+		format_on_save(client, bufnr)
+
+		-- Biome-specific source.fixAll action.
+		biome_fix_on_save(client, bufnr)
+	end,
+})
+
+
+-- ============================================================================
+-- Enable language servers
+-- ============================================================================
+
+vim.lsp.enable({
+	"angularls",
+	"lua_ls",
+	"rust_analyzer",
+	"tsgo",
+	"somesass_ls",
+	"biome",
+})
+
+
+-- ============================================================================
+-- Diagnostics
+-- ============================================================================
+
+vim.diagnostic.config({
+	virtual_text = true,
+	underline = true,
+	severity_sort = true,
+
+	float = {
+		border = "rounded",
+		source = true,
+	},
+
+	signs = {
+		text = {
+			[vim.diagnostic.severity.ERROR] = "󰅚 ",
+			[vim.diagnostic.severity.WARN] = "󰀪 ",
+			[vim.diagnostic.severity.INFO] = "󰋽 ",
+			[vim.diagnostic.severity.HINT] = "󰌶 ",
+		},
+
+		numhl = {
+			[vim.diagnostic.severity.ERROR] = "ErrorMsg",
+			[vim.diagnostic.severity.WARN] = "WarningMsg",
 		},
 	},
 })
 
--- Extras
+
+-- ============================================================================
+-- Utility commands
+-- ============================================================================
 
 local function restart_lsp(bufnr)
 	bufnr = bufnr or vim.api.nvim_get_current_buf()
-	local clients = vim.lsp.get_clients({ bufnr = bufnr })
+
+	local clients = vim.lsp.get_clients({
+		bufnr = bufnr,
+	})
 
 	for _, client in ipairs(clients) do
-		vim.lsp.stop_client(client.id)
+		client:stop()
 	end
 
 	vim.defer_fn(function()
@@ -127,118 +267,190 @@ local function restart_lsp(bufnr)
 	end, 100)
 end
 
+
 vim.api.nvim_create_user_command("LspRestart", function()
 	restart_lsp()
-end, {})
+end, {
+	desc = "Restart LSP clients for the current buffer",
+})
+
+
+-- ============================================================================
+-- LSP Status
+-- ============================================================================
 
 local function lsp_status()
 	local bufnr = vim.api.nvim_get_current_buf()
-	local clients = vim.lsp.get_clients({ bufnr = bufnr })
+
+	local clients = vim.lsp.get_clients({
+		bufnr = bufnr,
+	})
 
 	if #clients == 0 then
 		print("󰅚 No LSP clients attached")
 		return
 	end
 
-	print("󰒋 LSP Status for buffer " .. bufnr .. ":")
+	print("󰒋 LSP Status for buffer " .. bufnr)
 	print("─────────────────────────────────")
 
 	for i, client in ipairs(clients) do
-		print(string.format("󰌘 Client %d: %s (ID: %d)", i, client.name, client.id))
-		print("  Root: " .. (client.config.root_dir or "N/A"))
-		print("  Filetypes: " .. table.concat(client.config.filetypes or {}, ", "))
+		print(string.format(
+			"󰌘 Client %d: %s (ID: %d)",
+			i,
+			client.name,
+			client.id
+		))
 
-		-- Check capabilities
+		print("  Root: " .. (client.config.root_dir or "N/A"))
+
+		print(
+			"  Filetypes: "
+				.. table.concat(client.config.filetypes or {}, ", ")
+		)
+
 		local caps = client.server_capabilities
-		local features = {}
-		if caps == nil then
-			return
+
+		if not caps then
+			print("")
+			goto continue
 		end
+
+		local features = {}
+
 		if caps.completionProvider then
 			table.insert(features, "completion")
 		end
+
 		if caps.hoverProvider then
 			table.insert(features, "hover")
 		end
+
 		if caps.definitionProvider then
 			table.insert(features, "definition")
 		end
+
 		if caps.referencesProvider then
 			table.insert(features, "references")
 		end
+
 		if caps.renameProvider then
 			table.insert(features, "rename")
 		end
+
 		if caps.codeActionProvider then
 			table.insert(features, "code_action")
 		end
+
 		if caps.documentFormattingProvider then
 			table.insert(features, "formatting")
 		end
 
 		print("  Features: " .. table.concat(features, ", "))
 		print("")
+
+		::continue::
 	end
 end
 
-vim.api.nvim_create_user_command("LspStatus", lsp_status, { desc = "Show detailed LSP status" })
+
+vim.api.nvim_create_user_command("LspStatus", lsp_status, {
+	desc = "Show detailed LSP status",
+})
+
+
+-- ============================================================================
+-- LSP Capabilities
+-- ============================================================================
 
 local function check_lsp_capabilities()
 	local bufnr = vim.api.nvim_get_current_buf()
-	local clients = vim.lsp.get_clients({ bufnr = bufnr })
+
+	local clients = vim.lsp.get_clients({
+		bufnr = bufnr,
+	})
 
 	if #clients == 0 then
-		print("No LSP clients attached")
+		print("󰅚 No LSP clients attached")
 		return
 	end
 
 	for _, client in ipairs(clients) do
 		print("Capabilities for " .. client.name .. ":")
+
 		local caps = client.server_capabilities
-		if caps == nil then
-			return
+
+		if not caps then
+			print("  No capabilities reported")
+			print("")
+			goto continue
 		end
 
 		local capability_list = {
-			{ "Completion",                caps.completionProvider },
-			{ "Hover",                     caps.hoverProvider },
-			{ "Signature Help",            caps.signatureHelpProvider },
-			{ "Go to Definition",          caps.definitionProvider },
-			{ "Go to Declaration",         caps.declarationProvider },
-			{ "Go to Implementation",      caps.implementationProvider },
-			{ "Go to Type Definition",     caps.typeDefinitionProvider },
-			{ "Find References",           caps.referencesProvider },
-			{ "Document Highlight",        caps.documentHighlightProvider },
-			{ "Document Symbol",           caps.documentSymbolProvider },
-			{ "Workspace Symbol",          caps.workspaceSymbolProvider },
-			{ "Code Action",               caps.codeActionProvider },
-			{ "Code Lens",                 caps.codeLensProvider },
-			{ "Document Formatting",       caps.documentFormattingProvider },
+			{ "Completion", caps.completionProvider },
+			{ "Hover", caps.hoverProvider },
+			{ "Signature Help", caps.signatureHelpProvider },
+			{ "Go to Definition", caps.definitionProvider },
+			{ "Go to Declaration", caps.declarationProvider },
+			{ "Go to Implementation", caps.implementationProvider },
+			{ "Go to Type Definition", caps.typeDefinitionProvider },
+			{ "Find References", caps.referencesProvider },
+			{ "Document Highlight", caps.documentHighlightProvider },
+			{ "Document Symbol", caps.documentSymbolProvider },
+			{ "Workspace Symbol", caps.workspaceSymbolProvider },
+			{ "Code Action", caps.codeActionProvider },
+			{ "Code Lens", caps.codeLensProvider },
+			{ "Document Formatting", caps.documentFormattingProvider },
 			{ "Document Range Formatting", caps.documentRangeFormattingProvider },
-			{ "Rename",                    caps.renameProvider },
-			{ "Folding Range",             caps.foldingRangeProvider },
-			{ "Selection Range",           caps.selectionRangeProvider },
+			{ "Rename", caps.renameProvider },
+			{ "Folding Range", caps.foldingRangeProvider },
+			{ "Selection Range", caps.selectionRangeProvider },
 		}
 
-		for _, cap in ipairs(capability_list) do
-			local status = cap[2] and "✓" or "✗"
-			print(string.format("  %s %s", status, cap[1]))
+		for _, capability in ipairs(capability_list) do
+			local status = capability[2] and "✓" or "✗"
+
+			print(string.format(
+				"  %s %s",
+				status,
+				capability[1]
+			))
 		end
+
 		print("")
+
+		::continue::
 	end
 end
 
-vim.api.nvim_create_user_command("LspCapabilities", check_lsp_capabilities, { desc = "Show LSP capabilities" })
+
+vim.api.nvim_create_user_command("LspCapabilities", check_lsp_capabilities, {
+	desc = "Show LSP capabilities",
+})
+
+
+-- ============================================================================
+-- Diagnostics summary
+-- ============================================================================
 
 local function lsp_diagnostics_info()
 	local bufnr = vim.api.nvim_get_current_buf()
+
 	local diagnostics = vim.diagnostic.get(bufnr)
 
-	local counts = { ERROR = 0, WARN = 0, INFO = 0, HINT = 0 }
+	local counts = {
+		ERROR = 0,
+		WARN = 0,
+		INFO = 0,
+		HINT = 0,
+	}
 
 	for _, diagnostic in ipairs(diagnostics) do
 		local severity = vim.diagnostic.severity[diagnostic.severity]
-		counts[severity] = counts[severity] + 1
+
+		if counts[severity] then
+			counts[severity] = counts[severity] + 1
+		end
 	end
 
 	print("󰒡 Diagnostics for current buffer:")
@@ -249,22 +461,32 @@ local function lsp_diagnostics_info()
 	print("  Total: " .. #diagnostics)
 end
 
-vim.api.nvim_create_user_command("LspDiagnostics", lsp_diagnostics_info, { desc = "Show LSP diagnostics count" })
+
+vim.api.nvim_create_user_command("LspDiagnostics", lsp_diagnostics_info, {
+	desc = "Show LSP diagnostics count",
+})
+
+
+-- ============================================================================
+-- Comprehensive LSP information
+-- ============================================================================
 
 local function lsp_info()
 	local bufnr = vim.api.nvim_get_current_buf()
-	local clients = vim.lsp.get_clients({ bufnr = bufnr })
+
+	local clients = vim.lsp.get_clients({
+		bufnr = bufnr,
+	})
 
 	print("═══════════════════════════════════")
 	print("           LSP INFORMATION          ")
 	print("═══════════════════════════════════")
 	print("")
 
-	-- Basic info
 	print("󰈙 Language client log: " .. vim.lsp.get_log_path())
 	print("󰈔 Detected filetype: " .. vim.bo.filetype)
 	print("󰈮 Buffer: " .. bufnr)
-	print("󰈔 Root directory: " .. (vim.fn.getcwd() or "N/A"))
+	print("󰈔 Root directory: " .. vim.fn.getcwd())
 	print("")
 
 	if #clients == 0 then
@@ -282,72 +504,104 @@ local function lsp_info()
 	print("─────────────────────────────────")
 
 	for i, client in ipairs(clients) do
-		print(string.format("󰌘 Client %d: %s", i, client.name))
+		print(string.format(
+			"󰌘 Client %d: %s",
+			i,
+			client.name
+		))
+
 		print("  ID: " .. client.id)
 		print("  Root dir: " .. (client.config.root_dir or "Not set"))
-		print("  Command: " .. table.concat(client.config.cmd or {}, " "))
-		print("  Filetypes: " .. table.concat(client.config.filetypes or {}, ", "))
 
-		-- Server status
-		if client.is_stopped() then
-			print("  Status: 󰅚 Stopped")
-		else
-			print("  Status: 󰄬 Running")
-		end
+		print(
+			"  Command: "
+				.. table.concat(client.config.cmd or {}, " ")
+		)
 
-		-- Workspace folders
+		print(
+			"  Filetypes: "
+				.. table.concat(client.config.filetypes or {}, ", ")
+		)
+
+		print(
+			"  Status: "
+				.. (client:is_stopped() and "󰅚 Stopped" or "󰄬 Running")
+		)
+
+		-- Workspace folders.
 		if client.workspace_folders and #client.workspace_folders > 0 then
 			print("  Workspace folders:")
+
 			for _, folder in ipairs(client.workspace_folders) do
 				print("    • " .. folder.name)
 			end
 		end
 
-		-- Attached buffers count
+		-- Attached buffers.
 		local attached_buffers = {}
-		for buf, _ in pairs(client.attached_buffers or {}) do
+
+		for buf in pairs(client.attached_buffers or {}) do
 			table.insert(attached_buffers, buf)
 		end
+
 		print("  Attached buffers: " .. #attached_buffers)
 
-		-- Key capabilities
+		-- Key capabilities.
 		local caps = client.server_capabilities
-		local key_features = {}
-		if caps == nil then
-			return
-		end
-		if caps.completionProvider then
-			table.insert(key_features, "completion")
-		end
-		if caps.hoverProvider ~= nil then
-			table.insert(key_features, "hover")
-		end
-		if caps.definitionProvider then
-			table.insert(key_features, "definition")
-		end
-		if caps.documentFormattingProvider then
-			table.insert(key_features, "formatting")
-		end
-		if caps.codeActionProvider then
-			table.insert(key_features, "code_action")
-		end
 
-		if #key_features > 0 then
-			print("  Key features: " .. table.concat(key_features, ", "))
+		if caps then
+			local features = {}
+
+			if caps.completionProvider then
+				table.insert(features, "completion")
+			end
+
+			if caps.hoverProvider then
+				table.insert(features, "hover")
+			end
+
+			if caps.definitionProvider then
+				table.insert(features, "definition")
+			end
+
+			if caps.documentFormattingProvider then
+				table.insert(features, "formatting")
+			end
+
+			if caps.codeActionProvider then
+				table.insert(features, "code_action")
+			end
+
+			if #features > 0 then
+				print(
+					"  Key features: "
+						.. table.concat(features, ", ")
+				)
+			end
 		end
 
 		print("")
 	end
 
-	-- Diagnostics summary
+	-- Diagnostics summary.
 	local diagnostics = vim.diagnostic.get(bufnr)
+
 	if #diagnostics > 0 then
 		print("󰒡 Diagnostics Summary:")
-		local counts = { ERROR = 0, WARN = 0, INFO = 0, HINT = 0 }
+
+		local counts = {
+			ERROR = 0,
+			WARN = 0,
+			INFO = 0,
+			HINT = 0,
+		}
 
 		for _, diagnostic in ipairs(diagnostics) do
 			local severity = vim.diagnostic.severity[diagnostic.severity]
-			counts[severity] = counts[severity] + 1
+
+			if counts[severity] then
+				counts[severity] = counts[severity] + 1
+			end
 		end
 
 		print("  󰅚 Errors: " .. counts.ERROR)
@@ -360,9 +614,11 @@ local function lsp_info()
 	end
 
 	print("")
-	print("Use :LspLog to view detailed logs")
+	print("Use :checkhealth vim.lsp for LSP health information")
 	print("Use :LspCapabilities for full capability list")
 end
 
--- Create command
-vim.api.nvim_create_user_command("LspInfo", lsp_info, { desc = "Show comprehensive LSP information" })
+
+vim.api.nvim_create_user_command("LspInfo", lsp_info, {
+	desc = "Show comprehensive LSP information",
+})
