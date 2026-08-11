@@ -38,7 +38,10 @@ vim.pack.add({
 	{ src = "https://github.com/nvim-tree/nvim-web-devicons"},
 
 	-- Bufferline	
-	{ src = "https://github.com/akinsho/bufferline.nvim" }
+	{ src = "https://github.com/akinsho/bufferline.nvim" },
+
+	-- Diffview (git diff)
+	{ src = "https://github.com/sindrets/diffview.nvim" }
 })
 
 -- Init tokyonight color schemeq
