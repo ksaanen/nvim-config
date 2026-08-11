@@ -40,8 +40,8 @@ vim.pack.add({
 	-- Bufferline	
 	{ src = "https://github.com/akinsho/bufferline.nvim" },
 
-	-- Diffview (git diff)
-	{ src = "https://github.com/sindrets/diffview.nvim" }
+	-- Fugitive (git)
+	{ src = "https://github.com/tpope/vim-fugitive" },
 })
 
 -- Init tokyonight color schemeq
