@@ -65,6 +65,63 @@ For enabling Nerd Fonts icons the terminal should be configured to make use of o
 For example JetBrains Mono:
 ```https://github.com/ryanoasis/nerd-fonts/releases/download/v3.4.0/JetBrainsMono.zip```
 
+## Configuration
+Local configuration additions and overrides can be made in a ```local.lua``` in path: ```./lua/local.lua```. Some example configurations can be found below:
+
+### Github Copilot setup
+```lua
+--[[
+-- Configure Copilot (default option)
+vim.pack.add({
+	-- Copilot
+	-- run ':Copilot setup' for initial config
+	-- run ':help copilot' for docs
+	{ src = 'https://github.com/github/copilot.vim' },
+})
+```
+
+### Github Copilot Enterprise setup
+```lua
+-- Configure Copilot with Github Enterprise (alternative option)
+vim.pack.add({
+	-- Copilot
+	-- run ':Copilot setup' for initial config
+	-- run ':help copilot' for docs
+	{ src = 'https://github.com/zbirenbaum/copilot.lua' },
+})
+require("copilot").setup({
+	-- Replace with your company's GHE URL
+	auth_provider_url = "https://<ghe-company-url>.ghe.com",
+
+	filetypes = {
+		javascript = true, -- allow specific filetype
+		typescript = true, -- allow specific filetype
+		lua = true, -- allow specific filetype
+		["*"] = false, -- disable for all other filetypes and ignore default `filetypes`
+	},
+	
+	suggestion = {
+		enabled = true,
+		auto_trigger = true,
+		
+		-- Keymap configuration <M stants for the Alt key, so <M-l> means Alt + l
+		keymap = {
+			accept = "<M-l>",
+			next = "<M-]>",
+			prev = "<M-[>",
+			dismiss = "<C-]>",
+		},
+	},
+
+	panel = {
+		enabled = false,
+	},
+	
+	copilot_node_command = "node", -- Node >=22
+})
+]]
+```
+
 ## Usage
 Have a look at the cheatsheet.md or run ```:help cheatsheet``` inside Neovim for a quick reference of commands and features.
 
