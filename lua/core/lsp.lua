@@ -98,32 +98,6 @@ vim.lsp.config("rust_analyzer", {
 	},
 })
 
--- ESLint config
-vim.lsp.config("eslint", {
-    settings = {
-        workingDirectories = {
-            mode = "auto",
-        },
-    },
-
-    on_attach = function(client, bufnr)
-        vim.api.nvim_create_autocmd("BufWritePre", {
-            buffer = bufnr,
-            callback = function()
-                vim.lsp.buf.code_action({
-                    context = {
-                        only = {
-                            "source.fixAll.eslint",
-                        },
-                        diagnostics = {},
-                    },
-                    apply = true,
-                })
-            end,
-        })
-    end,
-})
-
 -- ============================================================================
 -- Formatting policy
 -- ============================================================================
@@ -134,7 +108,6 @@ vim.lsp.config("eslint", {
 -- expose formatting capabilities.
 local formatters = {
 	biome = true,
-	eslint = true,
 }
 
 
@@ -240,7 +213,6 @@ vim.lsp.enable({
 	"tsgo",
 	"somesass_ls",
 	"biome",
-	"eslint"
 })
 
 
