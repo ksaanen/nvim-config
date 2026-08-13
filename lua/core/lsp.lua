@@ -134,6 +134,7 @@ vim.lsp.config("eslint", {
 -- expose formatting capabilities.
 local formatters = {
 	biome = true,
+	eslint = true,
 }
 
 
