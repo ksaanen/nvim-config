@@ -48,6 +48,7 @@ And run:
 - TypeScript
 
 ### Additional steps needed for language support
+- Build fzf-native from data-folder
 - Install NodeJS (https://nodejs.org/en/download/)
 - Install Tree-sitter-cli ```npm install -g tree-sitter-cli```
 - Install TypeScript and tsgo by running ```npm install -g typescript @typescript/native-preview```
@@ -70,7 +71,6 @@ Local configuration additions and overrides can be made in a ```local.lua``` in 
 
 ### Github Copilot setup
 ```lua
---[[
 -- Configure Copilot (default option)
 vim.pack.add({
 	-- Copilot
@@ -119,7 +119,6 @@ require("copilot").setup({
 	
 	copilot_node_command = "node", -- Node >=22
 })
-]]
 ```
 
 ## Usage
