@@ -4,6 +4,9 @@ vim.pack.add({
 	-- nvim-lspconfig
 	{ src = 'https://github.com/neovim/nvim-lspconfig' },
 
+	-- Mason (managing lsp-servers, linters, formatters)
+	{ src = 'https://github.com/mason-org/mason.nvim' },
+
 	-- Devicons
 	{ src = "https://github.com/nvim-tree/nvim-web-devicons" },
 
@@ -57,6 +60,7 @@ require("core.autocmds")
 
 -- Load plugin configurations
 require("plugins.which-key")
+require("plugins.mason")
 require("plugins.telescope")
 require("plugins.treesitter")
 require("plugins.mini")
