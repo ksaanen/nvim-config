@@ -42,6 +42,7 @@ vim.api.nvim_create_autocmd("LspAttach", {
 })
 
 -- Automatic hover
+--[[
 vim.opt.updatetime = 500
 
 vim.api.nvim_create_autocmd("CursorHold", {
@@ -51,3 +52,4 @@ vim.api.nvim_create_autocmd("CursorHold", {
     end
   end,
 })
+]]
